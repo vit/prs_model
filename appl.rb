@@ -2,7 +2,12 @@
 $:.unshift ::File.expand_path(::File.dirname __FILE__)
 
 module Coms
-	class Appl
+=begin
+	def self.init path=nil
+
+	end
+	class App
+
 		attr_reader :mongo, :libModel, :pg, :auth, :conf, :user, :mail
 		def initialize
 			puts 'raser/utils/db/mongoconnection...'
@@ -41,6 +46,7 @@ module Coms
 			puts '...done'
 		end
 	end
+=end
 end
 
 #$:.shift
