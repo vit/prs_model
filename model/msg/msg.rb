@@ -6,6 +6,7 @@ $:.shift
 
 module Coms
 	class Msg
+		MSG_MESSAGE_CLASS = 'COMS:MSG:MESSAGE'
 		TS = -> { Time.now.utc.iso8601(10) }
 		IdSeq = -> args=({}) {
 			domain = (args[:domain] || 'localhost').to_s
@@ -29,60 +30,41 @@ module Coms
 			[]
 		end
 
-
-=begin
-		def send_notification name, lang, args={}
-			udata = @appl.user.get_user_info_ext args[:receiver_pin]
-			pdata = @appl.conf.paper.get_paper_info args[:cont_id], args[:paper_id]
-
-			file_type_text = case args[:file_type]
-			when 'abstract' then {ru: 'реферат', en: 'abstract'}
-			when 'paper' then {ru: 'доклад', en: 'paper'}
-			when 'presentation' then {ru: 'презентация', en: 'presentation'}
-			else {ru: 'файл неясного типа', en: 'unknown type file'}
+		def get_my_threads_on_paper pin, cont_id, paper_id
+			pin = pin.to_i
+			@coll.find(
+				{'_meta.class' => MSG_MESSAGE_CLASS, '_meta.author' => pin, '_meta.context' => cont_id, '_meta.object.id' => paper_id}
+			).sort( [[ '_meta.ctime', -1]] ).inject([]) do |acc,c|
+				acc << {
+					'_id' => c['_id'],
+					'title' => c['data']['thread_title']
+				}
 			end
-
-			if name == :files_uploaded
-				text = <<-"END";
-				ENGLISH TEXT SEE BELOW.
-
-				Уважаемый #{udata['title']['ru']} #{udata['fname']['ru']} #{udata['mname']['ru']} #{udata['lname']['ru']}!
-
-				Ваш #{file_type_text[:ru]} № #{pdata['_meta']['paper_cnt']} успешно передан в Оргкомитет конференции.
-
-				С уважением,
-				СПОК-Электроприбор.
-
-				Система находится по адресу http://comsep.ru.
-
-				*****
-
-				Dear #{udata['title']['en']} #{udata['fname']['en']} #{udata['mname']['en']} #{udata['lname']['en']}!
-
-				Your #{file_type_text[:en]} \# #{pdata['_meta']['paper_cnt']} is passed to the organizing committee successfully.
-
-				Sincerely
-				CoMS-Elektropribor
-
-				System address: http://comsep.ru.
-
-				END
-				subj = 'Notification :: Files uploaded | Уведомление :: Файлы загружены'
-
-				mail = Mail.new do
-					from 'system@comsep.ru'
-					to udata['email']
-					#to 'shiegin@gmail.com'
-					subject subj
-					body text
-				end
-				mail.charset = 'UTF-8'
-				mail.delivery_method :sendmail
-				mail.deliver
+#				[
+#					{title: 'post 001'},
+#					{title: 'post 002'},
+#					{title: 'post 003'},
+#					{title: 'post 004'}
+#				]
+		end
+		def add_my_message_on_paper pin, cont_id, paper_id, msg_text, thread_id, thread_title
+			pin = pin.to_i
+			ts = TS[]
+			msg = {
+				_id: @seq[],
+				_meta: {class: MSG_MESSAGE_CLASS, thread_id: thread_id, author: pin, context: cont_id, object: {type: 'paper', id: paper_id}, ctime: ts, mtime: ts},
+				data: {
+					thread_title: thread_title,
+					msg_text: msg_text
+				}
+			}
+			unless thread_id
+				msg[:_meta][:thread_id] = @seq[]
+				msg[:_meta][:is_thread_head] = true
 			end
+			@coll.insert( msg )
 		end
 
-=end
 	end
 
 end
