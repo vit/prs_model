@@ -15,7 +15,8 @@ module Coms
 			-> { ( Digest::SHA1.new << domain+rand.to_s+TS[] ).to_s[0..limit] }
 		}
 		def initialize attr={}
-			@seq = IdSeq[domain: 'localhost', size: 40]
+		#	@seq = IdSeq[domain: 'localhost', size: 40]
+			@seq = IdSeq[domain: 'localhost', size: 16]
 			@appl = attr[:appl]
 			@coll_name = attr[:coll_name]
 			@coll = @appl.mongo.open_collection @coll_name
@@ -58,7 +59,7 @@ module Coms
 			pin = pin.to_i
 			ts = TS[]
 			@coll.update({'_meta.class' => MSG_MESSAGE_DRAFT_CLASS, '_id' => _id, '_meta.author' => pin}, {'$set' => {'data' => data, '_meta.mtime' => ts}})
-			data
+		#	data
 		end
 		def get_my_message_draft_data pin, _id
 			pin = pin.to_i
@@ -72,6 +73,14 @@ module Coms
 			#	find_my_paper_files( pin, cont_id, _id).each{ |id| @grid.delete id }
 				@coll.remove( {'_meta.class' => MSG_MESSAGE_DRAFT_CLASS, '_id' => _id, '_meta.author' => pin} )
 			end
+		end
+		def save_my_draft_as_message pin, _id
+			pin = pin.to_i
+			ts = TS[]
+			@coll.update(
+				{'_meta.class' => MSG_MESSAGE_DRAFT_CLASS, '_id' => _id, '_meta.author' => pin},
+				{'$set' => {'_meta.class' => MSG_MESSAGE_CLASS, '_meta.mtime' => ts, '_meta.ctime' => ts}}
+			)
 		end
 		def get_my_threads_drafts_on_paper pin, cont_id, paper_id
 			pin = pin.to_i
@@ -87,31 +96,21 @@ module Coms
 			#		'data' => c['data']
 				}
 			end
-#				[
-#					{title: 'post 001'},
-#					{title: 'post 002'},
-#					{title: 'post 003'},
-#					{title: 'post 004'}
-#				]
 		end
 		def get_my_threads_on_paper pin, cont_id, paper_id
 			pin = pin.to_i
 			@coll.find(
 				{'_meta.class' => MSG_MESSAGE_CLASS, '_meta.author' => pin, '_meta.context' => cont_id, '_meta.object.id' => paper_id,
-					'_meta.is_draft' => { '$ne' => true }
+					'_meta.is_thread_head' => true
+				#	'_meta.is_draft' => true
 				}
 			).sort( [[ '_meta.ctime', -1]] ).inject([]) do |acc,c|
 				acc << {
 					'_id' => c['_id'],
-					'title' => c['data']['thread_title']
+					'thread_title' => c['data']['thread_title'],
+			#		'data' => c['data']
 				}
 			end
-#				[
-#					{title: 'post 001'},
-#					{title: 'post 002'},
-#					{title: 'post 003'},
-#					{title: 'post 004'}
-#				]
 		end
 		def add_my_message_on_paper pin, cont_id, paper_id, msg_text, thread_id, thread_title
 			pin = pin.to_i
