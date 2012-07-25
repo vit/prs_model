@@ -47,7 +47,8 @@ module Coms
 				}
 			}
 			unless thread_id
-				thread_id = @seq[]
+			#	thread_id = @seq[]
+				thread_id = id
 				msg[:_meta][:thread_id] = thread_id
 				msg[:_meta][:is_thread_head] = true
 			end
@@ -107,10 +108,26 @@ module Coms
 			).sort( [[ '_meta.ctime', -1]] ).inject([]) do |acc,c|
 				acc << {
 					'_id' => c['_id'],
+					'thread_id' => c['_meta']['thread_id'],
 					'thread_title' => c['data']['thread_title'],
 			#		'data' => c['data']
 				}
 			end
+		end
+		def get_my_messages_from_thread pin, thread_id
+			pin = pin.to_i
+			@coll.find(
+				{'_meta.class' => MSG_MESSAGE_CLASS, '_meta.author' => pin, '_meta.thread.id' => thread_id,
+				#	'_meta.is_thread_head' => true
+				}
+			).sort( [[ '_meta.ctime', -1]] ).inject([]) do |acc,c|
+				acc << {
+					'_id' => c['_id'],
+			#		'thread_title' => c['data']['thread_title'],
+					'data' => c['data']
+				}
+			end
+			[thread_id]
 		end
 		def add_my_message_on_paper pin, cont_id, paper_id, msg_text, thread_id, thread_title
 			pin = pin.to_i
