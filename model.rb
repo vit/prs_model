@@ -51,30 +51,16 @@ module Coms
 			@mail = Coms::Notification.new({appl: self})
 			puts '...done'
 
+			puts 'model/post/post...'
+			require 'model/post/post'
+			@post = Coms::Post.new({appl: self, coll_name: 'post'})
+			puts '...done'
+
 			puts 'model/msg/msg...'
 			require 'model/msg/msg'
 			@msg = Coms::Msg.new({appl: self, coll_name: 'msg'})
 			puts '...done'
 		end
 	end
-=begin
-	class Model
-		attr_reader :mongo, :pg, :sphinx, :lib, :coms
-		def initialize config={}
-			if config['mongo'] && config['mongo']['host'] && config['mongo']['dbname']
-				@mongo = Mongo::Connection.new(config['mongo']['host']).db(config['mongo']['dbname'])
-			end
-			if config['pg']
-				@pg = Raser::Db::PgConnection.new(config['pg'])
-				@pg.query "SET CLIENT_ENCODING TO 'WIN1251';"
-			end
-			if config['sphinx']
-				@sphinx = Raser::Db::MyConnection.new(config['sphinx'])
-			end
-			@lib = Lib.new self, config
-			@coms = Coms.new self, config
-		end
-	end
-=end
 end
 
