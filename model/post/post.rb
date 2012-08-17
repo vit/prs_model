@@ -6,7 +6,7 @@ $:.shift
 
 module Coms
 	class Post
-	#	MSG_MESSAGE_CLASS = 'COMS:MSG:MESSAGE'
+		POST_TEMPLATE_CLASS = 'COMS:POST:TEMPLATE'
 	#	MSG_MESSAGE_DRAFT_CLASS = 'COMS:MSG:MESSAGE:DRAFT'
 		TS = -> { Time.now.utc.iso8601(10) }
 		IdSeq = -> args=({}) {
@@ -24,24 +24,21 @@ module Coms
 
 		def get_templates cont_id
 		#	pin = pin.to_i
-	#		@coll.find(
-	#			{'_meta.class' => MSG_MESSAGE_CLASS, '_meta.author' => pin, '_meta.context' => cont_id, '_meta.object.id' => paper_id,
-	#				'_meta.is_thread_head' => true
-	#			#	'_meta.is_draft' => true
-	#			}
-	#		).sort( [[ '_meta.ctime', -1]] ).inject([]) do |acc,c|
-	#			acc << {
-	#				'_id' => c['_id'],
-	#				'thread_id' => c['_meta']['thread_id'],
-	#				'thread_title' => c['data']['thread_title'],
+			@coll.find(
+				{'_meta.class' => POST_TEMPLATE_CLASS, '_meta.context' => cont_id}
+			).sort( [[ '_meta.ctime', -1]] ).inject([]) do |acc,c|
+		#		acc << c['data']
+				acc << {
+					'_id' => c['_id'],
+					'title' => c['data']['title'],
 	#		#		'data' => c['data']
-	#			}
-	#		end
-			[
-				{_id: 1, title: {en: 'title 01', ru: 'название 01'}},
-				{_id: 2, title: {en: 'title 02', ru: 'название 02'}},
-				{_id: 3, title: {en: 'title 03', ru: 'название 03'}},
-			]
+				}
+			end
+#			[
+#				{_id: 1, title: {en: 'title 01', ru: 'название 01'}},
+#				{_id: 2, title: {en: 'title 02', ru: 'название 02'}},
+#				{_id: 3, title: {en: 'title 03', ru: 'название 03'}},
+#			]
 		end
 		def get_template_data cont_id, template_id
 		#	pin = pin.to_i
@@ -59,6 +56,35 @@ module Coms
 	#			}
 	#		end
 			{_id: 2, title: {en: 'title 01', ru: 'название 01'}}
+		end
+		def save_template_data cont_id, template_id, data
+			ts = TS[]
+			if template_id
+			else
+				template_id = @seq[]
+				msg = {
+					_id: template_id,
+					_meta: {class: POST_TEMPLATE_CLASS, context: cont_id, ctime: ts, mtime: ts},
+					data: data
+				}
+				@coll.insert( msg )
+			end
+			template_id
+		#	pin = pin.to_i
+	#		@coll.find(
+	#			{'_meta.class' => MSG_MESSAGE_CLASS, '_meta.author' => pin, '_meta.context' => cont_id, '_meta.object.id' => paper_id,
+	#				'_meta.is_thread_head' => true
+	#			#	'_meta.is_draft' => true
+	#			}
+	#		).sort( [[ '_meta.ctime', -1]] ).inject([]) do |acc,c|
+	#			acc << {
+	#				'_id' => c['_id'],
+	#				'thread_id' => c['_meta']['thread_id'],
+	#				'thread_title' => c['data']['thread_title'],
+	#		#		'data' => c['data']
+	#			}
+	#		end
+		#	data
 		end
 
 	end
