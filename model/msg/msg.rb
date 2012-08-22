@@ -74,10 +74,11 @@ module Coms
 		end
 		def delete_my_message_draft pin, _id
 			pin = pin.to_i
-			res = @coll.find_one( {'_meta.class' => MSG_MESSAGE_DRAFT_CLASS, '_id' => _id, '_meta.author' => pin} )
-			if @coll.find_one( {_id: _id, '_meta.class' => MSG_MESSAGE_DRAFT_CLASS, '_id' => _id, '_meta.author' => pin} )
+		#	res = @coll.find_one( {'_meta.class' => MSG_MESSAGE_DRAFT_CLASS, '_id' => _id, '_meta.author' => pin} )
+			if @coll.find_one( {_id: _id, '_meta.class' => MSG_MESSAGE_DRAFT_CLASS, '_meta.author' => pin} )
 			#	find_my_paper_files( pin, cont_id, _id).each{ |id| @grid.delete id }
-				@coll.remove( {'_meta.class' => MSG_MESSAGE_DRAFT_CLASS, '_id' => _id, '_meta.author' => pin} )
+			#	@coll.remove( {'_meta.class' => MSG_MESSAGE_DRAFT_CLASS, '_id' => _id, '_meta.author' => pin} )
+				@coll.remove( {_id: _id, '_meta.class' => MSG_MESSAGE_DRAFT_CLASS, '_meta.author' => pin} )
 			end
 		end
 		def save_my_draft_as_message pin, _id
