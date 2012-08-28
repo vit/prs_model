@@ -6,7 +6,7 @@ $:.shift
 
 module Coms
 	class Lib
-		LIBT_ITEM_CLASS = 'COMS:LIB:ITEM'
+		LIB_ITEM_CLASS = 'COMS:LIB:ITEM'
 		TS = -> { Time.now.utc.iso8601(10) }
 		IdSeq = -> args=({}) {
 			domain = (args[:domain] || 'localhost').to_s
@@ -22,6 +22,14 @@ module Coms
 		end
 		def get_id_by_alias a
 			1
+		end
+		def get_item_data _id
+		#	res = @coll.find_one( {_id: _id, '_meta.class' => LIB_ITEM_CLASS} )
+		#	res && res['data'] ? res['data'] : {}
+			{type: 'CONF', title: {en: 'Physcon 2013', ru: 'Физкон 2013'}}
+		end
+		def get_item_children _id
+			[]
 		end
 
 =begin
