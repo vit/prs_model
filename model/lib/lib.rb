@@ -26,10 +26,29 @@ module Coms
 		def get_item_data _id
 		#	res = @coll.find_one( {_id: _id, '_meta.class' => LIB_ITEM_CLASS} )
 		#	res && res['data'] ? res['data'] : {}
-			{type: 'CONF', title: {en: 'Physcon 2013', ru: 'Физкон 2013'}}
+			case _id
+			when '1' then {'type' => 'CONF:LIST', 'title' => {'en' => 'Conferences list', 'ru' => 'Список конференций'}}
+			when '11' then {'type' => 'CONF:ITEM', 'title' => {'en' => 'ICINS 2013', 'ru' => 'МКИНС 2013'}}
+			when '12' then {'type' => 'CONF:ITEM', 'title' => {'en' => 'ICINS 2012', 'ru' => 'МКИНС 2012'}}
+			when '13' then {'type' => 'CONF:ITEM', 'title' => {'en' => 'ICINS 2011', 'ru' => 'МКИНС 2011'}}
+			when '111' then {'type' => 'CONF:PAPER', 'title' => {'en' => 'Paper 001', 'ru' => 'Статья 001'}}
+			when '112' then {'type' => 'CONF:PAPER', 'title' => {'en' => 'Paper 002', 'ru' => 'Статья 002'}}
+			else {}
+			end
 		end
 		def get_item_children _id
-			[]
+			case _id
+			when '1' then [
+				{'id' => 11, 'type' => 'CONF:ITEM', 'title' => {'en' => 'ICINS 2013', 'ru' => 'МКИНС 2013'}},
+				{'id' => 12, 'type' => 'CONF:ITEM', 'title' => {'en' => 'ICINS 2012', 'ru' => 'МКИНС 2012'}},
+				{'id' => 13, 'type' => 'CONF:ITEM', 'title' => {'en' => 'ICINS 2011', 'ru' => 'МКИНС 2011'}}
+			]
+			when '11' then [
+				{'id' => 111, 'type' => 'CONF:PAPER', 'title' => {'en' => 'Paper 001', 'ru' => 'Статья 001'}},
+				{'id' => 112, 'type' => 'CONF:PAPER', 'title' => {'en' => 'Paper 002', 'ru' => 'Статья 002'}},
+			]
+			else []
+			end
 		end
 
 =begin
