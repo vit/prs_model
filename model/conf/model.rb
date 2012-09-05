@@ -3,7 +3,7 @@
 %w[mongo time digest/sha1 unicode_utils].each {|r| require r}
 
 $:.unshift ::File.expand_path(::File.dirname __FILE__)
-%w[paper review report].each {|r| require r}
+%w[paper review report participation].each {|r| require r}
 $:.shift
 
 module Coms
@@ -11,7 +11,7 @@ module Coms
 		class Model
 			CONF_CLASS = 'COMS:CONF'
 		#	attr_accessor :appl, :conn, :coll_name, :report, :review, :paper
-			attr_accessor :appl, :coll_name, :report, :review, :paper
+			attr_accessor :appl, :coll_name, :report, :review, :paper, :participation
 			TS = -> { Time.now.utc.iso8601(10) }
 			IdSeq = -> args=({}) {
 				domain = (args[:domain] || 'localhost').to_s
@@ -26,6 +26,7 @@ module Coms
 				@paper = Paper.new({appl: @appl, coll_name: @coll_name+'.paper'})
 				@review = Review.new({appl: @appl, coll_name: @coll_name+'.review'})
 				@report = Report.new({appl: @appl})
+				@participation = Participation.new({appl: @appl, coll_name: @coll_name+'.participation'})
 			end
 			def clear
 				@coll.clear
