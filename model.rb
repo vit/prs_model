@@ -8,7 +8,7 @@ $:.unshift ::File.expand_path(::File.dirname __FILE__)
 
 module Coms
 	class Model
-		attr_reader :mongo, :libModel, :pg, :auth, :conf, :user, :country, :mail, :msg, :post, :lib
+		attr_reader :mongo, :libModel, :pg, :auth, :util, :conf, :user, :country, :mail, :msg, :post, :lib
 		def initialize config=nil
 			puts 'raser/utils/db/mongoconnection...'
 			require 'raser/utils/db/mongoconnection'
@@ -28,6 +28,12 @@ module Coms
 		#		m.coll_name = 'lib'
 		#	end
 		#	puts '...done'
+
+			puts 'model/util/util...'
+			require 'model/util/util'
+		#	@util = Coms::Lib.new({appl: self, coll_name: 'util'})
+			@util = Coms::Util.new({appl: self})
+			puts '...done'
 
 			puts 'model/conf/model...'
 			require 'model/conf/model'
