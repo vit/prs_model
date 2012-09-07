@@ -16,8 +16,10 @@ module Coms
 				@seq = IdSeq[domain: 'localhost', size: 16]
 				@appl = attr[:appl]
 				@coll_name = attr[:coll_name]
+				@coll = @appl.mongo.open_collection @coll_name
 			end
 
+=begin
 			def create_my_participation pin, cont_id, _id
 				pin = pin.to_i
 				ts = TS[]
@@ -30,23 +32,35 @@ module Coms
 					})
 				_id
 			end
-			def save_my_participation_data pin, cont_id, _id, data
+=end
+			def create_my_participation pin, cont_id
+				save_my_participation_data pin, cont_id, {}
+			end
+			def save_my_participation_data pin, cont_id, data
 				pin = pin.to_i
+				_id = @seq[]
 				ts = TS[]
-					@coll.update(
-						{'_meta.class' => CONF_PARTICIPATION_FORM_CLASS, _id: _id, '_meta.owner' => pin, '_meta.parent' => cont_id},
-						{'$set' => {data: data, '_meta.mtime' => ts} }
-					)
+				@coll.db.eval "function() {
+					var query = {'_meta.class': '#{CONF_PARTICIPATION_FORM_CLASS}', '_meta.owner': #{pin.to_i}, '_meta.parent': '#{cont_id}'};
+					var newobj = {'_id': '#{_id}', '_meta': {'class': '#{CONF_PARTICIPATION_FORM_CLASS}', 'owner': #{pin.to_i}, 'parent': '#{cont_id}', 'ctime': '#{ts}', 'mtime': '#{ts}'}, data: {}};
+					if( !db.#{@coll_name}.findOne(query) )
+						db.#{@coll_name}.insert(newobj);
+				}"
+				@coll.update(
+					{'_meta.class' => CONF_REVIEW_CLASS, '_meta.owner' => pin.to_i, '_meta.parent' => cont_id},
+					{'$set' => {'data' => data, '_meta.mtime' => ts} }
+				)
 				_id
 			end
-			def get_my_participation_data pin, cont_id, _id
+			def get_my_participation_data pin, cont_id
 				pin = pin.to_i
-				res = @coll.find_one( {_id: _id, '_meta.class' => CONF_PARTICIPATION_FORM_CLASS, '_meta.owner' => pin, '_meta.parent' => cont_id} )
+				res = @coll.find_one( {'_meta.class' => CONF_PARTICIPATION_FORM_CLASS, '_meta.owner' => pin, '_meta.parent' => cont_id} )
 				res && res['data'] ? res['data'] : nil
+			#	{q: 'w'}
 			end
-			def drop_my_participation pin, cont_id, _id
+			def drop_my_participation pin, cont_id
 				pin = pin.to_i
-				@coll.remove( {_id: _id, '_meta.class' => CONF_PARTICIPATION_FORM_CLASS, '_meta.owner' => pin, '_meta.parent' => cont_id} )
+				@coll.remove( {'_meta.class' => CONF_PARTICIPATION_FORM_CLASS, '_meta.owner' => pin, '_meta.parent' => cont_id} )
 			end
 		end
 	end
