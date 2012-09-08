@@ -34,23 +34,26 @@ module Coms
 			end
 =end
 			def create_my_participation pin, cont_id
-				save_my_participation_data pin, cont_id, {}
+#				'qweqwqw rt eryet yru tyu'
+				save_my_participation_data(pin, cont_id, {})
 			end
-			def save_my_participation_data pin, cont_id, data
+			def save_my_participation_data pin, cont_id, data={}
 				pin = pin.to_i
 				_id = @seq[]
 				ts = TS[]
 				@coll.db.eval "function() {
 					var query = {'_meta.class': '#{CONF_PARTICIPATION_FORM_CLASS}', '_meta.owner': #{pin.to_i}, '_meta.parent': '#{cont_id}'};
-					var newobj = {'_id': '#{_id}', '_meta': {'class': '#{CONF_PARTICIPATION_FORM_CLASS}', 'owner': #{pin.to_i}, 'parent': '#{cont_id}', 'ctime': '#{ts}', 'mtime': '#{ts}'}, data: {}};
+					//var newobj = {'_id': '#{_id}', '_meta': {'class': '#{CONF_PARTICIPATION_FORM_CLASS}', 'owner': #{pin.to_i}, 'parent': '#{cont_id}', 'ctime': '#{ts}', 'mtime': '#{ts}'}, data: {}};
+					var newobj = {'_meta': {'class': '#{CONF_PARTICIPATION_FORM_CLASS}', 'owner': #{pin.to_i}, 'parent': '#{cont_id}', 'ctime': '#{ts}', 'mtime': '#{ts}'}, data: {}};
 					if( !db.#{@coll_name}.findOne(query) )
 						db.#{@coll_name}.insert(newobj);
 				}"
-				@coll.update(
-					{'_meta.class' => CONF_REVIEW_CLASS, '_meta.owner' => pin.to_i, '_meta.parent' => cont_id},
-					{'$set' => {'data' => data, '_meta.mtime' => ts} }
-				)
-				_id
+		#		@coll.update(
+		#			{'_meta.class' => CONF_PARTICIPATION_FORM_CLASS, '_meta.owner' => pin.to_i, '_meta.parent' => cont_id},
+		#			{'$set' => {'data' => data, '_meta.mtime' => ts} }
+		#		)
+			#	_id
+				123
 			end
 			def get_my_participation_data pin, cont_id
 				pin = pin.to_i
