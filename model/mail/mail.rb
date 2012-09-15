@@ -19,6 +19,7 @@ module Coms
 			when 'abstract' then {ru: 'реферат', en: 'abstract'}
 			when 'paper' then {ru: 'доклад', en: 'paper'}
 			when 'presentation' then {ru: 'презентация', en: 'presentation'}
+			when 'exdoc' then {ru: 'экспертный документ', en: 'expert document'}
 			else {ru: 'файл неясного типа', en: 'unknown type file'}
 			end
 
