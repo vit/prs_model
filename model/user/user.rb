@@ -117,6 +117,8 @@ module Coms
 
 		def sendmail_restore data
 
+			@appl.post.send_email_to_user_for_slot data['account']['pin'], 'account', 'restore', {}
+
 			text = <<-"END";
 			English text see below.
 

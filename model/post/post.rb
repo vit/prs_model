@@ -1,7 +1,7 @@
 # coding: UTF-8
 
 $:.unshift ::File.expand_path(::File.dirname __FILE__)
-%w[].each {|r| require r}
+%w[erb mail].each {|r| require r}
 $:.shift
 
 module Coms
@@ -59,6 +59,61 @@ module Coms
 				@coll.remove( {_id: template_id, '_meta.class' => POST_TEMPLATE_CLASS, '_meta.context' => cont_id} )
 			end
 		end
+
+		# ########################################
+
+		def get_template_for_slot category, name, args={}
+			Template.new (
+				{
+					'subject' => '001 Password recovery | Восстановление пароля',
+					'text' => (<<-"END";
+						English text see below.
+						<%= @data.to_s %>
+					END
+					)
+				}
+			)
+		end
+		def send_email_to_user_for_slot pin, category, name, args={}
+			user_info = @appl.user.get_user_info_ext pin
+			template = get_template_for_slot category, name, args
+			msg = template.apply user_info
+
+			mail = Mail.new do
+				from 'system@comsep.ru'
+			#	to data['account']['email']
+				to 'shiegin@gmail.com'
+				subject msg['subject']
+				body msg['text']
+			end
+			mail.charset = 'UTF-8'
+			mail.delivery_method :sendmail
+			mail.deliver
+
+		end
+
+		class Template
+			class Context
+				def initialize data
+					@data = data
+				end
+			end
+			def initialize t
+				@t = t
+			end
+			def apply data={}
+				c = Context.new data
+				{
+					'subject' => ERB.new(@t['subject']).result(c.instance_eval { binding }),
+					'text' => ERB.new(@t['text']).result(c.instance_eval { binding })
+				}
+			#	@t
+			end
+			def to_s
+				@t.to_s
+			end
+		end
+
 
 	end
 end
