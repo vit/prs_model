@@ -68,7 +68,7 @@ module Coms
 					'subject' => '001 Password recovery | Восстановление пароля',
 					'text' => (<<-"END";
 						English text see below.
-						<%= @data.to_s %>
+						<%= @user.to_s %>
 					END
 					)
 				}
@@ -77,7 +77,7 @@ module Coms
 		def send_email_to_user_for_slot pin, category, name, args={}
 			user_info = @appl.user.get_user_info_ext pin
 			template = get_template_for_slot category, name, args
-			msg = template.apply user_info
+			msg = template.apply({user: user_info})
 
 			mail = Mail.new do
 				from 'system@comsep.ru'
@@ -96,6 +96,9 @@ module Coms
 			class Context
 				def initialize data
 					@data = data
+					data.each_pair do |key, value|
+						instance_variable_set('@' + key.to_s, value)
+					end
 				end
 			end
 			def initialize t
