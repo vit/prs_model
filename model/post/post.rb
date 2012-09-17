@@ -69,6 +69,7 @@ module Coms
 					'text' => (<<-"END";
 						English text see below.
 						<%= @user.to_s %>
+						<%= qqq %>
 					END
 					)
 				}
@@ -99,6 +100,9 @@ module Coms
 					data.each_pair do |key, value|
 						instance_variable_set('@' + key.to_s, value)
 					end
+				end
+				def qqq
+					'qwerqreyrutyi'
 				end
 			end
 			def initialize t
