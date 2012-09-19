@@ -1,11 +1,14 @@
 # coding: UTF-8
 
+%w[erb mail ].each {|r| require r}
+
 $:.unshift ::File.expand_path(::File.dirname __FILE__)
-%w[erb mail].each {|r| require r}
+%w[producer].each {|r| require r}
 $:.shift
 
 module Coms
 	class Post
+		attr_accessor :producer
 		POST_TEMPLATE_CLASS = 'COMS:POST:TEMPLATE'
 		TS = -> { Time.now.utc.iso8601(10) }
 		IdSeq = -> args=({}) {
@@ -19,6 +22,7 @@ module Coms
 			@appl = attr[:appl]
 			@coll_name = attr[:coll_name]
 			@coll = @appl.mongo.open_collection @coll_name
+			@producer = Producer.new({appl: @appl, coll_name: @coll_name+'.producer'})
 		end
 
 		def get_templates cont_id
