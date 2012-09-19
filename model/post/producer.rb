@@ -10,10 +10,21 @@ module Coms
 	class Post
 		class Producer
 			class Config
+				attr_reader :query
+				def initialize
+				#	@main = 'qqqqq'
+				end
 				def test
 					yield
 				end
+				def main &block
+					@query = block
+				#	@main = 'wwwww'
+				end
 			end
+			class Scope
+			end
+
 		#	POST_TEMPLATE_CLASS = 'COMS:POST:TEMPLATE'
 			TS = -> { Time.now.utc.iso8601(10) }
 			IdSeq = -> args=({}) {
@@ -28,25 +39,44 @@ module Coms
 				@coll_name = attr[:coll_name]
 				@coll = @appl.mongo.open_collection @coll_name
 
-				@items = {}
+#				@items = {}
+#
+#				Dir.glob( File.join( File.expand_path(::File.dirname __FILE__), 'db/*.rb' ) ) do |fname|
+#					name = File.basename(fname, ".rb")
+##				#	puts name
+#				#	puts fname
+#			#		str = File.read fname, "r:UTF-8"
+#					File.open(fname, "r:UTF-8") do |f|
+#						str = f.read
+#						config = Config.new
+#						config.instance_exec do
+#							eval str, binding
+#						end
+#						@items[name] = config
+#					end
+#
+#				#	puts str
+#				end
 
-				Dir.glob( File.join( File.expand_path(::File.dirname __FILE__), 'db/*.rb' ) ) do |fname|
-					name = File.basename(fname, ".rb")
-				#	puts name
-				#	puts fname
-			#		str = File.read fname, "r:UTF-8"
-					File.open(fname, "r:UTF-8") do |f|
-						str = f.read
-						config = Config.new
-						config.instance_exec do
-							eval str, binding
-						end
-						@items[name] = config
+			end
+			def call name, args={}
+			#	puts File.join( File.expand_path(::File.dirname __FILE__), 'db')
+		#		File.join( File.expand_path(::File.dirname __FILE__), 'db', name+'.rb').to_s
+			#	'asdsdfgsdgdfh'
+				File.open( File.join( File.expand_path(::File.dirname __FILE__), 'db', name+'.rb' ), "r:UTF-8") do |f|
+					str = f.read
+					config = Config.new
+					config.instance_exec do
+						eval str, binding
 					end
-
-				#	puts str
+		#			config.call args
+					scope = Scope.new
+				#	scope.instance_exec args, &config.main if config.main
+				#	return config.main.to_s
+					return config.query[args].to_s if config.query
+				#	config.to_s
 				end
-
+			#	'asdsdfgsdgdfh'
 			end
 		end
 

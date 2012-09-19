@@ -8,7 +8,8 @@ $:.shift
 
 module Coms
 	class Post
-		attr_accessor :producer
+	#	attr_accessor :producer
+		attr_reader :producer
 		POST_TEMPLATE_CLASS = 'COMS:POST:TEMPLATE'
 		TS = -> { Time.now.utc.iso8601(10) }
 		IdSeq = -> args=({}) {
@@ -74,15 +75,19 @@ module Coms
 						English text see below.
 						<%= @user.to_s %>
 						<%= qqq %>
+						<%= @testdata.to_s %>
 					END
 					)
 				}
 			)
 		end
 		def send_email_to_user_for_slot pin, category, name, args={}
+
+			testdata = @producer.call('test', {q: 'w'})
+
 			user_info = @appl.user.get_user_info_ext pin
 			template = get_template_for_slot category, name, args
-			msg = template.apply({user: user_info})
+			msg = template.apply({user: user_info, testdata: testdata})
 
 			mail = Mail.new do
 				from 'system@comsep.ru'
