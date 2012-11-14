@@ -4,7 +4,8 @@ test do
 end
 
 main do |args|
-	[1,2,3,args]
+	@appl.conf.get_confs_list
+#	[1,2,3,args]
 end
 
 
