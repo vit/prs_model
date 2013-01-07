@@ -6,7 +6,9 @@ module Coms
 		class Paper
 			CONF_PAPER_CLASS = 'COMS:CONF:PAPER'
 			CONF_PAPER_ABSTRACT_FILE_CLASS = 'COMS:CONF:PAPER:ABSTRACT:FILE'
+			CONF_PAPER_ABSTRACT_EXDOC_FILE_CLASS = 'COMS:CONF:PAPER:ABSTRACT_EXDOC:FILE'
 			CONF_PAPER_PAPER_FILE_CLASS = 'COMS:CONF:PAPER:PAPER:FILE'
+			CONF_PAPER_PAPER_EXDOC_FILE_CLASS = 'COMS:CONF:PAPER:PAPER_EXDOC:FILE'
 			CONF_PAPER_PRESENTATION_FILE_CLASS = 'COMS:CONF:PAPER:PRESENTATION:FILE'
 			CONF_PAPER_EXDOC_FILE_CLASS = 'COMS:CONF:PAPER:EXDOC:FILE'
 			attr_reader :coll
@@ -51,9 +53,11 @@ module Coms
 			def check_file_class cn
 				case cn.to_s.to_sym
 				when :abstract then CONF_PAPER_ABSTRACT_FILE_CLASS
+				when :abstract_exdoc then CONF_PAPER_ABSTRACT_EXDOC_FILE_CLASS
 				when :paper then CONF_PAPER_PAPER_FILE_CLASS
+				when :paper_exdoc then CONF_PAPER_PAPER_EXDOC_FILE_CLASS
 				when :presentation then CONF_PAPER_PRESENTATION_FILE_CLASS
-				when :exdoc then CONF_PAPER_EXDOC_FILE_CLASS
+			#	when :exdoc then CONF_PAPER_EXDOC_FILE_CLASS
 				else 'INEXISTENT'
 				end
 			end
@@ -63,9 +67,11 @@ module Coms
 			#	when CONF_PAPER_PAPER_FILE_CLASS then 'p'
 			#	when CONF_PAPER_PRESENTATION_FILE_CLASS then 'pr'
 				when CONF_PAPER_ABSTRACT_FILE_CLASS then 'abstract'
+				when CONF_PAPER_ABSTRACT_EXDOC_FILE_CLASS then 'abstract_exdoc'
 				when CONF_PAPER_PAPER_FILE_CLASS then 'paper'
+				when CONF_PAPER_PAPER_EXDOC_FILE_CLASS then 'paper_exdoc'
 				when CONF_PAPER_PRESENTATION_FILE_CLASS then 'presentation'
-				when CONF_PAPER_EXDOC_FILE_CLASS then 'exdoc'
+			#	when CONF_PAPER_EXDOC_FILE_CLASS then 'exdoc'
 				else 'inexistent'
 				end
 			end
