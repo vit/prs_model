@@ -3,8 +3,30 @@
 module Coms
 	class User
 		class Country
+			def self.init
+			#	begin
+				%w[en ru].each do |lang|
+					ByLang[lang] = List.map do |c|
+						{code: c[:code], name: c[lang.to_sym]}
+				#	end.take(10).sort do |a,b|
+					end.sort do |a,b|
+					#	if a[:name].is_a?(String) and b[:name].is_a?(String)
+							a[:name].to_s<=>b[:name].to_s
+					#	else
+					#		p a.inspect
+					#		0
+					#	end
+					end
+				end
+			#	rescue Exception => e
+			#		p e.inspect
+			#	end
+			end
 			def self.list
 				List
+			end
+			def self.by_lang lang
+				ByLang[ lang.to_s=='ru' ? 'ru' : 'en' ]
 			end
 			def self.get_name code, lang=:en
 				code = code.to_sym
@@ -21,6 +43,7 @@ module Coms
 				end
 				@names[lang][code]
 			end
+			ByLang = {}
 			List = [
 				#{:code=>"ac", :en=>nil, :ru=>nil},
 				#{:code=>"ac", :en=>"Ascension Island", :ru=>"Остров Вознесения"},
@@ -39,7 +62,7 @@ module Coms
 				{:code=>"at", :en=>"Austria", :ru=>"Австрия"},
 				{:code=>"au", :en=>"Australia", :ru=>"Австралия"},
 				{:code=>"aw", :en=>"Aruba", :ru=>"Аруба (Антильские острова Нид.)"},
-				{:code=>"ax", :en=>"AX", :ru=>"AX"},
+			#	{:code=>"ax", :en=>"AX", :ru=>"AX"},					# Åland Islands
 				{:code=>"az", :en=>"Azerbaijan", :ru=>"Азербайджан"},
 				{:code=>"ba", :en=>"Bosnia and Herzegovina", :ru=>"Босния и Герцеговина"},
 				{:code=>"bb", :en=>"Barbados", :ru=>"Барбадос"},
@@ -92,7 +115,7 @@ module Coms
 				{:code=>"er", :en=>"Eritrea", :ru=>"Эритрея"},
 				{:code=>"es", :en=>"Spain", :ru=>"Испания"},
 				{:code=>"et", :en=>"Ethiopia", :ru=>"Эфиопия"},
-				{:code=>"eu", :en=>nil, :ru=>nil},
+			#	{:code=>"eu", :en=>nil, :ru=>nil},
 				{:code=>"fi", :en=>"Finland", :ru=>"Финляндия"},
 				{:code=>"fj", :en=>"Fiji", :ru=>"Фиджи"},
 				{:code=>"fk", :en=>"Falkland Islands", :ru=>"Фолклендские (Мальвинские) Острова"},

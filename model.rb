@@ -50,6 +50,7 @@ module Coms
 			require 'model/user/country'
 			#@user = Coms::User.new({appl: self, coll_name: 'user'})
 			@country = Coms::User::Country
+			@country.init
 			puts '...done'
 
 			puts 'model/mail/mail...'
