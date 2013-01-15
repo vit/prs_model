@@ -17,9 +17,11 @@ module Coms
 
 			file_type_text = case args[:file_type]
 			when 'abstract' then {ru: 'реферат', en: 'abstract'}
+			when 'abstract_exdoc' then {ru: 'файл экспертных документов для реферата', en: 'expert documents file for abstract'}
 			when 'paper' then {ru: 'доклад', en: 'paper'}
+			when 'paper_exdoc' then {ru: 'файл экспертных документов для доклада', en: 'expert documents file for paper'}
 			when 'presentation' then {ru: 'презентация', en: 'presentation'}
-			when 'exdoc' then {ru: 'экспертный документ', en: 'expert document'}
+		#	when 'exdoc' then {ru: 'экспертный документ', en: 'expert document'}
 			else {ru: 'файл неясного типа', en: 'unknown type file'}
 			end
 
