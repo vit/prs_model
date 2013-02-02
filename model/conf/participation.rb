@@ -65,6 +65,11 @@ module Coms
 				pin = pin.to_i
 				@coll.remove( {'_meta.class' => CONF_PARTICIPATION_FORM_CLASS, '_meta.owner' => pin, '_meta.parent' => cont_id} )
 			end
+			def _submitted_all cont_id
+				@coll.find(
+					{'_meta.class' => CONF_PARTICIPATION_FORM_CLASS, '_meta.parent' => cont_id}
+				)
+			end
 		end
 	end
 end

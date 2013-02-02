@@ -23,7 +23,7 @@ module Coms
 					registrators_list: {title: :registrators_list},
 					reviewers_list: {title: :reviewers_list},
 					papers_by_section: {title: :papers_by_section},
-				#	papers_list_with_reviews: {title: :papers_list_with_reviews},
+					participation_forms: {title: :participation_forms}
 				}
 			end
 			def bycountry cont_id
@@ -254,6 +254,46 @@ module Coms
 						rez
 					end
 				}
+			end
+			def participation_forms cont_id, lang_code
+				{
+					'forms' => @appl.conf.participation._submitted_all(cont_id).inject([]) do |acc, p|
+						acc << {
+							'data' => p['data']
+						}
+#						= acc + p['reviewers'] if p['reviewers'].is_a? Array
+#					#	acc.uniq
+						acc
+					end
+				}
+=begin
+				{
+					'reviewers' =>@appl.conf.paper._submitted_all(cont_id).inject([]) do |acc, p|
+						acc = acc + p['reviewers'] if p['reviewers'].is_a? Array
+						acc.uniq
+					end.sort.map do |pin|
+					#	u = @appl.user.get_user_info(pin) || {}
+						u = @appl.user.get_user_info_ext(pin) || {}
+						rez = {}
+						rez['pin'] = pin
+						u['lname'] ||= {}
+						u['fname'] ||= {}
+						u['mname'] ||= {}
+						u['affiliation'] ||= {}
+						u['city'] ||= {}
+						rez['phone'] = u['phone']
+						rez['fax'] = u['fax']
+						rez['affiliation'] = u['affiliation'][lang_code]
+						rez['city'] = u['city'][lang_code]
+						rez['email'] = u['email']
+						rez['user_name'] = sprintf('%s %s %s', u['fname'][lang_code], u['mname'][lang_code], u['lname'][lang_code])
+					#	rez['country_name'] = u['country']
+						rez['country'] = u['country'] || ''
+					#	rez['country_name'] = u.inspect
+						rez
+					end
+				}
+=end
 			end
 		end
 	end
