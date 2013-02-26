@@ -188,7 +188,8 @@ module Coms
 									),
 									'phone' => '',
 									'fax' => '',
-									'email' => '',
+								#	'email' => '',
+									'email' => a['email'] || '',
 									'country' => a['country'] || '',
 									'city' => a['city'][lang_code],
 									'affiliation' => a['affiliation'][lang_code],
@@ -259,7 +260,8 @@ module Coms
 				{
 					'forms' => @appl.conf.participation._submitted_all(cont_id).inject([]) do |acc, p|
 						acc << {
-							'data' => p['data']
+							'pin' => p['_meta']['owner'],
+							'rawdata' => p['data']
 						}
 #						= acc + p['reviewers'] if p['reviewers'].is_a? Array
 #					#	acc.uniq
