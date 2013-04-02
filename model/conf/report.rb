@@ -23,7 +23,9 @@ module Coms
 					registrators_list: {title: :registrators_list},
 					reviewers_list: {title: :reviewers_list},
 					papers_by_section: {title: :papers_by_section},
-					participation_forms: {title: :participation_forms}
+					participation_forms: {title: :participation_forms},
+					keywords_1: {title: :keywords_1},
+					keywords_2: {title: :keywords_2}
 				}
 			end
 			def bycountry cont_id
