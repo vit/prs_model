@@ -256,8 +256,12 @@ module Coms
 			end
 
 			# Decision
-			def set_paper_decision cont_id, _id, decision
-				@coll.update({'_meta.class' => CONF_PAPER_CLASS, '_id' => _id, '_meta.parent' => cont_id}, {'$set' => {'decision' => decision}})
+			def set_paper_decision cont_id, _ids, decision
+				_ids = [_ids] unless _ids.is_a?(Array)
+				_ids.each do |_id|
+					@coll.update({'_meta.class' => CONF_PAPER_CLASS, '_id' => _id, '_meta.parent' => cont_id}, {'$set' => {'decision' => decision}})
+				end
+			#	@coll.update({'_meta.class' => CONF_PAPER_CLASS, '_id' => _id, '_meta.parent' => cont_id}, {'$set' => {'decision' => decision}})
 			end
 			def get_paper_decision cont_id, _id
 				c = @coll.find_one(
