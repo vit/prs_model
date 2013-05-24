@@ -9,13 +9,15 @@ $:.unshift ::File.expand_path(::File.dirname __FILE__)
 module Coms
 	class Model
 		attr_reader :mongo, :libModel, :pg, :auth, :util, :conf, :user, :country, :mail, :msg, :post, :lib
-		def initialize config=nil
+		def initialize config={}
 			puts 'raser/utils/db/mongoconnection...'
 			require 'raser/utils/db/mongoconnection'
 			@mongo = Raser::Db::MongoConnection.new do |m|
-				m.host = '127.0.0.1'
-			#	m.db_name = 'lib-db'
-				m.db_name = 'coms'
+		#		m.host = '127.0.0.1'
+	#			m.host = 's2.physcon.ru'
+				m.host = config['mongo'] && config['mongo']['host'] ? config['mongo']['host'] : '127.0.0.1'
+		#		m.db_name = 'coms'
+				m.db_name = config['mongo'] && config['mongo']['dbname'] ? config['mongo']['dbname'] : 'coms'
 			end
 			puts '...done'
 

@@ -18,8 +18,10 @@ module Coms
 		end
 		def self.init file
 	#		config0 = YAML::load( open(file, "r:UTF-8") )
+			config0 = YAML::load( open(file, "r:UTF-8") )
 		#	puts config0
 			env = Rails.env
+			@config = config0 && config0[env] ? config0[env] : {}
 	#		@config = config0 && config0[env] ? config0[env] : {}
 		end
 	end
