@@ -3,13 +3,13 @@
 %w[erb mail ].each {|r| require r}
 
 $:.unshift ::File.expand_path(::File.dirname __FILE__)
-%w[producer].each {|r| require r}
+%w[producer taskmgr templatemgr].each {|r| require r}
 $:.shift
 
 module Coms
 	class Post
 	#	attr_accessor :producer
-		attr_reader :producer
+		attr_reader :producer, :taskmgr, :templatemgr
 		POST_TEMPLATE_CLASS = 'COMS:POST:TEMPLATE'
 		TS = -> { Time.now.utc.iso8601(10) }
 		IdSeq = -> args=({}) {
@@ -24,6 +24,8 @@ module Coms
 			@coll_name = attr[:coll_name]
 			@coll = @appl.mongo.open_collection @coll_name
 			@producer = Producer.new({appl: @appl, coll_name: @coll_name+'.producer'})
+			@taskmgr = TaskMgr.new({appl: @appl, coll_name: @coll_name+'.task'})
+			@templatemgr = TemplateMgr.new({appl: @appl, coll_name: @coll_name+'.template'})
 		end
 
 		def get_templates cont_id

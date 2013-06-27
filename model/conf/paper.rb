@@ -302,7 +302,7 @@ module Coms
 
 			def _submitted_all cont_id
 				@coll.find(
-					{'_meta.class' => CONF_PAPER_CLASS, '_meta.parent' => cont_id}
+					{'_meta.class' => CONF_PAPER_CLASS, '_meta.parent' => (cont_id.is_a?(Array) ? {'$in' => cont_id} : cont_id)}
 				)
 			end
 		end

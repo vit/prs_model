@@ -43,7 +43,7 @@ module Coms
 				@coll = @appl.mongo.open_collection @coll_name
 			end
 			def call name, args={}
-				File.open( File.join( File.expand_path(::File.dirname __FILE__), 'list', name+'.rb' ), "r:UTF-8") do |f|
+				File.open( File.join( File.expand_path(::File.dirname __FILE__), 'producers', name+'.rb' ), "r:UTF-8") do |f|
 					str = f.read
 					config = Config.new
 					config.instance_exec do
@@ -55,7 +55,7 @@ module Coms
 			end
 			def get_list
 				result = []
-				Dir.glob( File.join( File.expand_path(::File.dirname __FILE__), 'list/*.rb' ) ) do |fname|
+				Dir.glob( File.join( File.expand_path(::File.dirname __FILE__), 'producers/*.rb' ) ) do |fname|
 					name = File.basename(fname, ".rb")
 					result << name
 				end
