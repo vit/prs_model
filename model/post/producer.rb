@@ -61,6 +61,12 @@ module Coms
 				end
 				result.sort
 			end
+			def exists? name
+				Dir.glob( File.join( File.expand_path( __dir ), 'producers/*.rb' ) ) do |fname|
+					name = File.basename(fname, ".rb")
+					return File.file?(fname)
+				end
+			end
 		end
 
 	end
