@@ -48,6 +48,40 @@ module Coms
 					return File.file?(fname)
 				end
 			end
+
+			def parse_src str
+				parser = Parser.new
+				parser.instance_exec do
+					eval str, binding
+				end
+				parser
+			#	scope = Scope.new @appl
+			#	return scope.instance_exec args, &config.query if config.query
+			end
+			def apply text, data={}
+				c = Context.new data
+				ERB.new(text).result(c.instance_eval { binding })
+			end
+			class Parser
+				attr_reader :parsed
+				def initialize
+					@parsed = {}
+				end
+				def subject s
+					@parsed['subject'] = s
+				end
+				def body s
+					@parsed['body'] = s
+				end
+			end
+			class Context
+				def initialize data
+					@data = data
+					data.each_pair do |key, value|
+						instance_variable_set('@' + key.to_s, value)
+					end
+				end
+			end
 		end
 
 	end

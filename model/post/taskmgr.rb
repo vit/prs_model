@@ -34,19 +34,32 @@ module Coms
 				@coll.insert({ _id: id, _meta: {class: POST_TASK_ELM_CLASS, state: 'prepared', parent: task_id, owner: nil, ctime: TS[], mtime: TS[]}, attr: attr, data: data })
 				id
 			end
+
+			def get_pkg_for_sending limit
+				@coll.find({ '_meta.class' => POST_TASK_ELM_CLASS, '_meta.state' => 'sending'}).limit(limit).map do |e|
+					e
+				end
+			end
+			def set_task_elm_state elm_id, state, log
+				@coll.update({ '_meta.class' => POST_TASK_ELM_CLASS, '_id' => elm_id}, {'$set' => {'_meta.state' => state, '_meta.log' => log}})
+			end
+
 			def get_prepared_elms limit
 				@coll.find({ '_meta.class' => POST_TASK_ELM_CLASS, '_meta.state' => 'prepared'}).limit(limit).map do |e|
-			#	@coll.find({ '_meta.class' => POST_TASK_ELM_CLASS}).limit(limit).map do |e|
 					e
-				#	{
-				#		'_id' => e['_id'],
-				#		'data' => e['data'],
-				#		'attr' => e['attr']
-				#	}
+				end
+			end
+
+			def get_task_elms task_id
+				@coll.find({ '_meta.class' => POST_TASK_ELM_CLASS, '_meta.parent' => task_id}).map do |e|
+					e
 				end
 			end
 			def remove_task_elms task_id
 				@coll.remove({ '_meta.class' => POST_TASK_ELM_CLASS, '_meta.parent' => task_id})
+			end
+			def change_task_elms_state task_id, from, to
+				@coll.update({ '_meta.class' => POST_TASK_ELM_CLASS, '_meta.parent' => task_id, '_meta.state' => from}, {'$set' => {'_meta.state' => to}}, {multi: true})
 			end
 			def remove_task task_id
 				remove_task_elms task_id
