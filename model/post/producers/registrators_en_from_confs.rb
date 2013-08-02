@@ -8,7 +8,7 @@ main do |args|
 				{'pin' => p}
 			end.select do |data|
 				user = @appl.user.get_user_info( data['pin'] )
-				['ru', 'be', 'ua'].include?(user['country'])
+				not ['ru', 'be', 'ua'].include?(user['country'])
 			end
 		else
 			[]

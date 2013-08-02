@@ -55,11 +55,33 @@ module Coms
 					e
 				end
 			end
-			def remove_task_elms task_id
-				@coll.remove({ '_meta.class' => POST_TASK_ELM_CLASS, '_meta.parent' => task_id})
+			def remove_task_elms task_id, elms=nil
+				if elms.is_a? Array
+					elms.each do |e|
+						@coll.remove({ '_meta.class' => POST_TASK_ELM_CLASS, '_meta.parent' => task_id, '_id' => e})
+					end
+				else
+					@coll.remove({ '_meta.class' => POST_TASK_ELM_CLASS, '_meta.parent' => task_id})
+				end
 			end
-			def change_task_elms_state task_id, from, to
-				@coll.update({ '_meta.class' => POST_TASK_ELM_CLASS, '_meta.parent' => task_id, '_meta.state' => from}, {'$set' => {'_meta.state' => to}}, {multi: true})
+			def change_task_elms_state task_id, from, to, elms=nil
+				if elms.is_a? Array
+					if from
+						elms.each do |e|
+							@coll.update({ '_meta.class' => POST_TASK_ELM_CLASS, '_meta.parent' => task_id, '_meta.state' => from, '_id' => e}, {'$set' => {'_meta.state' => to}}, {multi: true})
+						end
+					else
+						elms.each do |e|
+							@coll.update({ '_meta.class' => POST_TASK_ELM_CLASS, '_meta.parent' => task_id, '_id' => e}, {'$set' => {'_meta.state' => to}}, {multi: true})
+						end
+					end
+				else
+					if from
+						@coll.update({ '_meta.class' => POST_TASK_ELM_CLASS, '_meta.parent' => task_id, '_meta.state' => from}, {'$set' => {'_meta.state' => to}}, {multi: true})
+					else
+						@coll.update({ '_meta.class' => POST_TASK_ELM_CLASS, '_meta.parent' => task_id}, {'$set' => {'_meta.state' => to}}, {multi: true})
+					end
+				end
 			end
 			def remove_task task_id
 				remove_task_elms task_id
