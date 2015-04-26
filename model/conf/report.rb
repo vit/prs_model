@@ -19,13 +19,16 @@ module Coms
 					papers_statistics_after_decision: {title: :papers_statistics_after_decision},
 					papers_list_with_reviews: {title: :papers_list_with_reviews},
 					papers_list_with_reviews2: {title: :papers_list_with_reviews2},
+					titles_with_authors: {title: :titles_with_authors},
 					authors_list: {title: :authors_list},
 					registrators_list: {title: :registrators_list},
 					reviewers_list: {title: :reviewers_list},
 					papers_by_section: {title: :papers_by_section},
 					participation_forms: {title: :participation_forms},
 					keywords_1: {title: :keywords_1},
-					keywords_2: {title: :keywords_2}
+					keywords_2: {title: :keywords_2},
+					paper_countries_list: {title: :paper_countries_list},
+					titles_with_authors: {title: :titles_with_authors}
 				}
 			end
 			def bycountry cont_id
@@ -298,6 +301,77 @@ module Coms
 					end
 				}
 =end
+			end
+			def paper_countries_list cont_id, lang_code
+				{
+					'countries' => @appl.conf.paper._submitted_all(cont_id).map do |p|
+							if p['decision'] && p['decision']['decision'] && p['decision']['decision'].start_with?('accept')
+								p['authors'].map do |a|
+									a['country'] || ''
+								end
+							else
+								[]
+							end
+					end.flatten.uniq.sort
+				}
+			end
+			def titles_with_authors cont_id, lang_code
+			#	papers_list_with_reviews cont_id, lang_code
+				{
+					'papers' => @appl.conf.paper._submitted_all(cont_id).map do |p|
+					#	acc[ p['_meta']['paper_cnt'] ] = {
+						{
+							'registrator_data' => (-> do
+								pin = p['_meta']['owner']
+								u = @appl.user.get_user_info_ext(pin) || {}
+								rez = {}
+								rez['pin'] = pin
+								u['lname'] ||= {}
+								u['fname'] ||= {}
+								u['mname'] ||= {}
+								u['affiliation'] ||= {}
+								u['city'] ||= {}
+								rez['phone'] = u['phone']
+								rez['fax'] = u['fax']
+								rez['affiliation'] = u['affiliation'][lang_code]
+								rez['city'] = u['city'][lang_code]
+								rez['email'] = u['email']
+								rez['user_name'] = sprintf('%s %s %s', u['fname'][lang_code], u['mname'][lang_code], u['lname'][lang_code])
+							#	rez['country_name'] = u['country']
+								rez['country'] = u['country'] || ''
+								rez
+							end[]),
+							'authors_data' => p['authors'].map do |a|
+								{
+									'user_name' => sprintf('%s %s %s', a['fname'][lang_code], a['mname'][lang_code], a['lname'][lang_code]),
+									'user_name_ru' => sprintf('%s %s %s', a['fname']['ru'], a['mname']['ru'], a['lname']['ru']),
+									'user_name_en' => sprintf('%s %s %s', a['fname']['en'], a['mname']['en'], a['lname']['en']),
+									'short_user_name' => sprintf('%s%s %s',
+										a['fname'][lang_code] && a['fname'][lang_code].length>0 ? a['fname'][lang_code][0]+'.' : '',
+										a['mname'][lang_code] && a['mname'][lang_code].length>0 ? a['mname'][lang_code][0]+'.' : '',
+										a['lname'][lang_code]
+									),
+									'phone' => '',
+									'fax' => '',
+								#	'email' => '',
+									'email' => a['email'] || '',
+									'country' => a['country'] || '',
+									'city' => a['city'][lang_code],
+									'affiliation' => a['affiliation'][lang_code],
+									'affiliation_ru' => a['affiliation']['ru'],
+									'affiliation_en' => a['affiliation']['en'],
+									'user_id' => ''
+								}
+							end,
+							'decision' => (p['decision'] ? p['decision'] : {}),
+							'paper_id' => p['_id'],
+							'paper_cnt' => p['_meta']['paper_cnt'],
+							#'title' => p['text']['title'][lang_code]
+							'title' => p['text']['title']
+						}
+					#	acc
+					end.sort{ |a,b| a['paper_cnt'] <=> b['paper_cnt'] }
+				}
 			end
 		end
 	end

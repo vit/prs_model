@@ -299,6 +299,9 @@ module Coms
 				fid = find_paper_file cont_id, _id, lang, cl
 				fid ? @grid.get(fid) : nil
 			end
+			def get_paper_file_by_id fid
+				fid ? @grid.get(fid) : nil
+			end
 
 			def _submitted_all cont_id
 				@coll.find(
