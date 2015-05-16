@@ -29,7 +29,8 @@ module Coms
 					keywords_2: {title: :keywords_2},
 					paper_countries_list: {title: :paper_countries_list},
 					titles_with_authors: {title: :titles_with_authors},
-					download_files_one_archive: {title: :download_files_one_archive}
+					download_files_one_archive: {title: :download_files_one_archive},
+					download_files_one_archive_no_exdoc: {title: :download_files_one_archive_no_exdoc}
 				}
 			end
 			def bycountry cont_id
