@@ -19,6 +19,7 @@ module Coms
 					papers_statistics_after_decision: {title: :papers_statistics_after_decision},
 					papers_list_with_reviews: {title: :papers_list_with_reviews},
 					papers_list_with_reviews2: {title: :papers_list_with_reviews2},
+					papers_list_with_reviews3: {title: :papers_list_with_reviews3},
 					titles_with_authors: {title: :titles_with_authors},
 					authors_list: {title: :authors_list},
 					registrators_list: {title: :registrators_list},
@@ -227,6 +228,9 @@ module Coms
 				}
 			end
 			def papers_list_with_reviews2 cont_id, lang_code
+				papers_list_with_reviews cont_id, lang_code
+			end
+			def papers_list_with_reviews3 cont_id, lang_code
 				papers_list_with_reviews cont_id, lang_code
 			end
 			def authors_list cont_id, lang_code
