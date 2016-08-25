@@ -31,7 +31,10 @@ module Coms
 					paper_countries_list: {title: :paper_countries_list},
 					titles_with_authors: {title: :titles_with_authors},
 					download_files_one_archive: {title: :download_files_one_archive},
-					download_files_one_archive_no_exdoc: {title: :download_files_one_archive_no_exdoc}
+					#download_files_one_archive_no_exdoc: {title: :download_files_one_archive_no_exdoc},
+					download_files_one_archive_abstracts: {title: :download_files_one_archive_abstracts},
+					download_files_one_archive_papers: {title: :download_files_one_archive_papers},
+					download_files_one_archive_presentations: {title: :download_files_one_archive_presentations},
 				}
 			end
 			def bycountry cont_id
