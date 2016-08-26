@@ -52,7 +52,10 @@ module Coms
 					context_homepage: data['info']['homepage'][lang_code],
 					context_title: data['info']['title'][lang_code],
 					papcnt: @appl.conf.paper._submitted_all(cont_id).count,
-					countrycnt: bycountry(cont_id).keys.count
+					countrycnt: bycountry(cont_id).keys.count,
+					by_country: abstracts_by_country(cont_id, lang_code).map do |c|
+						[c[0],c[1].count]
+					end
 				}
 			end
 
