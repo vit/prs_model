@@ -15,6 +15,7 @@ module Coms
 					abstracts_with_files: {title: :abstracts_with_files},
 					abstracts_with_paper_files: {title: :abstracts_with_paper_files},
 					abstract_ids_with_files: {title: :abstract_ids_with_files},
+					abstract_ids_with_files_by_date: {title: :abstract_ids_with_files_by_date},
 					papers_statistics: {title: :papers_statistics},
 					papers_statistics_after_decision: {title: :papers_statistics_after_decision},
 					papers_list_with_reviews: {title: :papers_list_with_reviews},
