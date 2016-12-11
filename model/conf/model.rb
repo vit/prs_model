@@ -74,6 +74,16 @@ module Coms
 					rid
 				end
 			end
+
+			def get_users_by_right _id, right
+				roles = @coll.find_one( {'_meta.class' => CONF_CLASS, _id: _id}, fields: {roles: 1} )['roles'] || []
+				roles.select do |r|
+					r['rights'] && r['rights'][right]
+				end.map do |r|
+					r['members'] || []
+				end.flatten
+			end
+
 			def get_conf_role_rights _id, rid
 				res = @coll.find_one( {'_meta.class' => CONF_CLASS, _id: _id}, fields: {roles: 1} )['roles'].select { |r| r['id']==rid }.first
 				res ? res['rights'] : nil

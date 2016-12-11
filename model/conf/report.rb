@@ -248,11 +248,14 @@ module Coms
 			end
 			def reviewers_list cont_id, lang_code
 				{
-					'reviewers' =>@appl.conf.paper._submitted_all(cont_id).inject([]) do |acc, p|
-						acc = acc + p['reviewers'] if p['reviewers'].is_a? Array
-						acc.uniq
-					end.sort.map do |pin|
-					#	u = @appl.user.get_user_info(pin) || {}
+					'reviewers' => (
+						@appl.conf.paper._submitted_all(cont_id).inject([]) do |acc, p|
+							acc = acc + p['reviewers'] if p['reviewers'].is_a? Array
+						#	acc.uniq
+							acc
+						end + @appl.conf.get_users_by_right(cont_id, 'review_everything')
+					).uniq.sort.map do |pin|
+					#end.sort.map do |pin|
 						u = @appl.user.get_user_info_ext(pin) || {}
 						rez = {}
 						rez['pin'] = pin
