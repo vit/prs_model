@@ -47,13 +47,12 @@ module Coms
 					if( !db.#{@coll_name}.findOne(query) )
 						db.#{@coll_name}.insert(newobj);
 				}"
-				@coll.update(
+				r = @coll.update(
 					{'_meta.class' => CONF_PARTICIPATION_FORM_CLASS, '_meta.owner' => pin.to_i, '_meta.parent' => cont_id},
 					{'$set' => {'data' => data, '_meta.mtime' => ts} }
 				)
-			#	_id
-			#	123
-		#		data
+				@appl.mail.send_notification :participation_form_saved, :both, {receiver_pin: pin, cont_id: cont_id}
+				r
 			end
 			def get_my_participation_data pin, cont_id
 				pin = pin.to_i
