@@ -15,9 +15,11 @@ module Coms
 			@mongo = Raser::Db::MongoConnection.new do |m|
 		#		m.host = '127.0.0.1'
 	#			m.host = 's2.physcon.ru'
-				m.host = config['mongo'] && config['mongo']['host'] ? config['mongo']['host'] : '127.0.0.1'
+				#m.host = config['mongo'] && config['mongo']['host'] ? config['mongo']['host'] : '127.0.0.1'
+				m.host = config['mongo'] && config['mongo']['host'] ? config['mongo']['host'] : (ENV['MONGO_HOST'] ? ENV['MONGO_HOST'] : '127.0.0.1')
 		#		m.db_name = 'coms'
-				m.db_name = config['mongo'] && config['mongo']['dbname'] ? config['mongo']['dbname'] : 'coms'
+				#m.db_name = config['mongo'] && config['mongo']['dbname'] ? config['mongo']['dbname'] : 'coms'
+				m.db_name = config['mongo'] && config['mongo']['dbname'] ? config['mongo']['dbname'] : (ENV['MONGO_NAME'] ? ENV['MONGO_NAME'] : 'coms')
 			end
 			puts '...done'
 
