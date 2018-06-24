@@ -52,6 +52,13 @@ module Coms
 			def save_conf_info _id, info
 				@coll.update( {'_meta.class' => CONF_CLASS, _id: _id}, {'$set' => {info: info, '_meta.mtime' => TS[]} } )
 			end
+			def get_conf_downloads _id
+				res = get_conf_data _id
+				res.is_a?(Hash) ? res['downloads'] : nil
+			end
+			def save_conf_downloads _id, downloads
+				@coll.update( {'_meta.class' => CONF_CLASS, _id: _id}, {'$set' => {downloads: downloads, '_meta.mtime' => TS[]} } )
+			end
 			def get_conf_keywords _id
 				res = get_conf_data _id
 				res.is_a?(Hash) ? res['keywords'] : nil
