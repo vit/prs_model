@@ -186,9 +186,6 @@ module Coms
 				@coll.find(
 					{'_meta.class' => CONF_PAPER_CLASS, '_meta.parent' => cont_id}
 				).sort( [[ '_meta.ctime', -1]] ).skip(offset).limit(limit).inject([]) do |acc,c|
-#				).sort( [[ '_meta.ctime', -1]] ).offset(offset).limit(limit).inject([]) do |acc,c|
-#				).sort( [[ '_meta.ctime', -1]] ).inject([]) do |acc,c|
-#				).inject([]) do |acc,c|
 					acc << {'_id' => c['_id'], '_meta' => c['_meta'],
 					#	'text' => (c['text'] ? ({'title' => c['text']['title']}) : ({})),
 						'text' => c['text'],
@@ -210,6 +207,21 @@ module Coms
 						'text' => c['text'],
 						'keywords' => c['keywords'],
 						'authors' => c['authors'],
+					#	'files' => get_paper_abstract_files_list(cont_id, c['_id'])
+						'files' => get_paper_files_list(cont_id, c['_id'])
+					}
+				end
+			end
+			def get_papers_for_reviewing_list_2 pin, cont_id, offset=0, limit=20
+				pin = pin.to_i
+				@coll.find(
+					{'_meta.class' => CONF_PAPER_CLASS, '_meta.parent' => cont_id, 'reviewers' => pin}
+				).sort( [[ '_meta.ctime', -1]] ).skip(offset).limit(limit).inject([]) do |acc,c|
+					acc << {'_id' => c['_id'], '_meta' => c['_meta'],
+						'text' => c['text'],
+						'keywords' => c['keywords'],
+						'authors' => c['authors'],
+						'my_review' => @appl.conf.review.get_my_review_data(pin, cont_id, c['_id']),
 					#	'files' => get_paper_abstract_files_list(cont_id, c['_id'])
 						'files' => get_paper_files_list(cont_id, c['_id'])
 					}
